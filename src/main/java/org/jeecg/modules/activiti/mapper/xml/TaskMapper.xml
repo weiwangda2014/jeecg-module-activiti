@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.activiti.mapper.TaskMapper">
+    <resultMap type="org.jeecg.modules.activiti.entity.VO.TaskVo" id="TaskVoResultMap">
+        <id column="taskId" property="taskId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="modelName" property="modelName" jdbcType="VARCHAR" javaType="String"/>
+        <result column="modelKey" property="modelKey" jdbcType="VARCHAR" javaType="String"/>
+        <result column="tableId" property="tableId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="tableName" property="tableName" jdbcType="VARCHAR" javaType="String"/>
+        <result column="htmlJson" property="htmlJson" jdbcType="VARCHAR" javaType="String"/>
+        <result column="formDataId" property="formDataId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="formCategory" property="formCategory" jdbcType="INTEGER" javaType="Integer"/>
+        <result column="dataId" property="dataId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="formId" property="formId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="createBy" property="createBy" jdbcType="VARCHAR" javaType="String"/>
+        <result column="instanceName" property="instanceName" jdbcType="VARCHAR" javaType="String"/>
+        <result column="nodeName" property="nodeName" jdbcType="VARCHAR" javaType="String"/>
+        <result column="createTime" property="createTime" javaType="Date"/>
+        <result column="assignee" property="assignee" jdbcType="VARCHAR" javaType="String"/>
+        <result column="processInstanceId" property="processInstanceId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="executionId" property="executionId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="processDefinitionId" property="processDefinitionId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="parentTaskId" property="parentTaskId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="nodeType" property="nodeType" jdbcType="INTEGER" javaType="Integer"/>
+        <result column="nodeId" property="nodeId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="taskType" property="taskType" jdbcType="INTEGER" javaType="Integer"/>
+        <result column="bpmnStatus" property="bpmnStatus" jdbcType="INTEGER" javaType="Integer"/>
+        <result column="modelId" property="modelId" jdbcType="VARCHAR" javaType="String"/>
+        <result column="formData" property="formData" jdbcType="VARCHAR" javaType="String"/>
+        <result column="formDataCreateTime" property="formDataCreateTime" jdbcType="DATE" javaType="Date"/>
+        <result column="modelExtendBusinessPlate" property="modelExtendBusinessPlate" jdbcType="VARCHAR"
+                javaType="String"/>
+    </resultMap>
+
+    <select id="getMyTaskList" parameterType="org.jeecg.modules.activiti.entity.VO.TaskVo"
+            resultMap="TaskVoResultMap">
+
+        SELECT DISTINCT
+        Q.modelId,
+        Q.modelName,
+        Q.modelKey,
+        Q.formCategory,
+        Q.tableId,
+        Q.tableName,
+        Q.htmlJson,
+        Q.formDataId,
+        Q.dataId,
+        Q.formId,
+        Q.formDataCreateTime,
+        Q.formData,
+        Q.bpmnStatus,
+        Q.bizModule,
+        Q.createBy,
+        Q.username,
+        Q.instanceName,
+        Q.taskId,
+        Q.nodeName,
+        Q.createTime,
+        Q.assignee,
+        Q.processInstanceId,
+        Q.executionId,
+        Q.processDefinitionId,
+        Q.parentTaskId,
+        Q.nodeType,
+        Q.nodeId,
+        IF(Q.assignee IS NOT NULL, 1,0) AS taskType
+                        FROM
+    (  SELECT DISTINCT
+        m.id_ AS modelId,
+        m.NAME_ AS modelName,
+        m.KEY_ AS modelKey,
+        deploy.form_category AS formCategory,
+        deploy.table_id AS tableId,
+        deploy.table_name AS tableName,
+        deploy.html_json AS htmlJson,
+        mfd.id AS formDataId,
+        mfd.data_id AS dataId,
+        mfd.form_id AS formId,
+        mfd.create_time AS formDataCreateTime,
+        mfd.form_data AS formData,
+        mfd.bpmn_status AS bpmnStatus,
+        me.biz_module AS bizModule,
+        u.realname AS createBy,
+        u.username AS username,
+        CONCAT( u.realname, '发起了【', m.NAME_, '】申请' ) AS instanceName,
+        RES.id_ AS taskId,
+        n.node_name AS nodeName,
+        RES.CREATE_TIME_ AS createTime,
+        RES.ASSIGNEE_ AS assignee,
+        RES.PROC_INST_ID_ AS processInstanceId,
+        RES.EXECUTION_ID_ AS executionId,
+        RES.PROC_DEF_ID_ AS processDefinitionId,
+        RES.PARENT_TASK_ID_ AS parentTaskId,
+        n.node_type AS nodeType,
+        RES.TASK_DEF_KEY_ AS nodeId
+        FROM
+        ACT_RU_TASK RES
+        LEFT JOIN ACT_RU_VARIABLE VAR ON RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ AND VAR.TASK_ID_ IS NULL
+        LEFT JOIN ACT_RU_IDENTITYLINK I_OR0 ON I_OR0.TASK_ID_ = RES.ID_
+        LEFT JOIN extend_model_form_data mfd ON mfd.process_instance_id = RES.PROC_INST_ID_
+        LEFT JOIN act_re_model m ON m.id_ = mfd.model_id
+        LEFT JOIN extend_model me ON me.model_id = m.ID_
+        LEFT JOIN extend_model_form_deployment deploy ON deploy.process_definition_id = RES.PROC_DEF_ID_
+        LEFT JOIN onl_cgform_head cgform ON cgform.id = deploy.table_id
+        LEFT JOIN sys_user u ON u.username = mfd.create_by
+        LEFT JOIN extend_k_node n ON n.node_id = RES.TASK_DEF_KEY_ AND n.process_definition_id = RES.PROC_DEF_ID_
+
+        <where>
+            <if test="1==1">
+                RES.SUSPENSION_STATE_ = 1
+            </if>
+            <if test="1==1">
+                AND (
+                <if test="taskVo.assignee != null and taskVo.assignee != ''">
+                     RES.ASSIGNEE_ = #{taskVo.assignee}
+                </if>
+                <if test="(taskVo.candidate != null and taskVo.candidate != '') or (taskVo.roleList != null and taskVo.roleList.size() > 0)">
+                    OR (RES.ASSIGNEE_ IS NULL   AND I_OR0.TYPE_ = 'candidate'   AND (
+
+                    <if test="taskVo.candidate != null and taskVo.candidate != ''">
+                        I_OR0.USER_ID_ = #{taskVo.candidate}
+                    </if>
+                    <if test="taskVo.roleList != null and taskVo.roleList.size() > 0">
+                        OR I_OR0.GROUP_ID_ IN
+                        <if test="taskVo.roleList != null and taskVo.roleList.size() > 0">
+                            <foreach collection="taskVo.roleList" item="role" open="(" separator="," close=")">#{role}
+                            </foreach>
+                        </if>
+                    </if>
+                    )
+                    )
+                </if>
+                )
+            </if>
+
+            <if test="taskVo.modelId != null and taskVo.modelId != ''">
+                AND m.ID_ = #{taskVo.modelId}
+            </if>
+            <if test="taskVo.modelKey != null and taskVo.modelKey != ''">
+                AND m.KEY_ like CONCAT('%', #{taskVo.modelKey}, '%')
+            </if>
+            <if test="taskVo.modelName != null and taskVo.modelName != ''">
+                AND m.NAME_ like CONCAT('%', #{taskVo.modelName}, '%')
+            </if>
+            <if test="taskVo.bizModule != null">
+                AND me.biz_module= #{taskVo.bizModule}
+            </if>
+            <if test="taskVo.taskId != null">
+                AND RES.ID_ = #{taskVo.taskId}
+            </if>
+            <if test="taskVo.taskInitiatorList != null and taskVo.taskInitiatorList.size() > 0">
+                AND
+                <foreach collection="taskVo.taskInitiatorList" item="taskInitiator" open="(" separator="OR"
+                         close=")">
+                    u.username = #{taskInitiator}
+                </foreach>
+            </if>
+        </where>
+        ) Q
+    </select>
+</mapper>

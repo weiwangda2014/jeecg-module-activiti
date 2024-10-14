@@ -1,38 +1,59 @@
-# jeecg-module-activiti
+![图片说明](images/image.png)
 
-#### 介绍
+
+## 介绍
+
 JeecgActiviti是基于JeecgBoot开源版本集成工作流解决方案，遵循BPMN2.0国际标准，具有更稳定、更健壮的工作流性能。
-基于Activiti 8 进行中国流程特色扩展，更符合国内流程需求；主要功能包含在线流程设计器，实现在线画流程；在线表单设计器，实现在线设计表单（在线配置表单）,表单挂接,业务流转，流程监控，流程跟踪，流程委托、抄送功能、代理，超时提醒、并行会签、串行会签等。
 
-#### 软件架构
-软件架构说明
+基于Activiti 8 进行中国流程特色扩展，更符合国内流程需求；主要功能包含在线流程设计器，实现在线画流程；在线表单设计器，实现在线设计表单（在线配置表单）,表单挂接,业务流转，流程监控，流程跟踪，流程委托、抄送功能、代理，超时提醒、并行会签、串行会签等。实现功能包括：
+
+```
+│─流程模块功能 
+│  ├─流程设计器(整合Online表单和自定义表单)
+│  └─我的任务
+│  └─历史任务
+│  └─历史流程
+│  └─流程实例管理
+│  └─流程监听管理
+│  └─流程表达式
+│  └─我发起的流程
+│  └─我的抄送
+│  └─流程挂起、委派、抄送、驳回、跳转、关闭、取回
+│  └─流程与表单关联（松耦合设计）
+│  └─表单支持发起多次流程
+│  └─流程催办
+│  └─表单提醒
+│  └─等等
+
+```
+
+如果您对JeecgBoot不了解，请移步JeecgBoot项目介绍 [http://www.jeecg.com](http://www.jeecg.com)
+
+## 前端源码
 
 
-#### 安装教程
+添加微信免费获取完整源码
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+<img src="images/wechat.jpg" width="250px" height="250px" alt="描述文字" />
 
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+## 项目演示
 
 
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+流程创建
+![图片说明](images/01.png)
+流程设计
+![图片说明](images/02.png)
+部署流程
+![图片说明](images/03.png)
+发起流程
+![图片说明](images/04.png)
+![图片说明](images/001.png)
+我的任务
+![图片说明](images/05.png)
+![图片说明](images/06.png)
+历史任务
+![图片说明](images/07.png)
+![图片说明](images/08.png)
+![图片说明](images/002.png)
+我的工单
+![图片说明](images/09.png)
